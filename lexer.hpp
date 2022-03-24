@@ -2,6 +2,7 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include <iostream>
 
 class Token {
 	public:
@@ -30,30 +31,34 @@ class Token {
 		}
 	}
 
-	Token(TokenType type, const std::string &str)
-	: mTokenType(type), mStrData(str) {}
+	Token(TokenType type, const std::string &str, int line = 0, int col = 0)
+	: mTokenType(type), mStrData(str), mline(line), mcol(col) {}
 
 	TokenType getTokenType() const { return mTokenType; }
 	std::string getStringData() const {
 		return mStrData;
 	}
 
-	private:	
+	int getLine() const { return mline; }
+	int getColumn() const { return mcol; }
+
+	private:
+	int mline, mcol;
 	TokenType mTokenType;
 	std::string mStrData;
 };
 
 class Lexer {
 	public:
-	Lexer(const std::string &str);
+	Lexer(std::istream &is);
 	std::vector<Token> tokenize();
 
 	private:
-	std::string mstr;
-	int mpos;
+	std::istream &mis;
+	int mline, mcol;
 
-	int next(int n = 1);	// next nth character
-	int peek(int n = 1);	// next nth character, without advancing pointer
+	int next();	// next character
+	int peek();	// next character, without advancing pointer
 	void skip(int n = 1);	// skip n characters
 
 	Token nextToken();

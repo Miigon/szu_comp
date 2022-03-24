@@ -2,22 +2,23 @@
 #include "lexer.hpp"
 #include "typeutils.hpp"
 
-Lexer::Lexer(const std::string &str)
-: mstr(str), mpos(-1) {}
+Lexer::Lexer(std::istream &is)
+: mis(is), mline(1), mcol(0) {}
 
-int Lexer::next(int n) {
-	if(mpos+n >= mstr.size()) return EOF;
-	return mstr[mpos+=n];
+int Lexer::next() {
+	if(mis.eof()) return EOF;
+	mcol++;
+	return mis.get();
 }
 
-int Lexer::peek(int n) {
-	if(mpos+n >= mstr.size()) return EOF;
-	return mstr[mpos+n];
+int Lexer::peek() {
+	if(mis.eof()) return EOF;
+	return mis.peek();
 }
 
 void Lexer::skip(int n) {
-	if(mpos+n >= mstr.size()) mpos = mstr.size();
-	mpos += n;
+	mcol++;
+	mis.ignore(n);
 }
 
 std::vector<Token> Lexer::tokenize() {
@@ -30,25 +31,31 @@ std::vector<Token> Lexer::tokenize() {
 }
 
 Token Lexer::nextToken() {
-	int ch = next();
-	while(iswhitespace(ch)) { // skip whitespaces
+	int ch;
+	do { // skip whitespaces
 		ch = next();
-	}
+		if(ch == '\n') {
+			mcol = 0;
+			mline++;
+		}
+	} while(iswhitespace(ch));
 
 	if(ch == EOF) return Token(Token::eof, "eof");
+
+	int col_ch = mcol;
 
 	// operator
 	switch(ch) {
 		case ':':
 			if(peek() == '=') {
 				skip();
-				return Token(Token::assignOp, ":=");
+				return Token(Token::assignOp, ":=", mline, col_ch);
 			} else {
 				goto bad;
 			}
-		case '+': return Token(Token::plusOp, "+");
-		case '*': return Token(Token::multiplyOp, "*");
-		case ';': return Token(Token::delim, ";");
+		case '+': return Token(Token::plusOp, "+", mline, col_ch);
+		case '*': return Token(Token::multiplyOp, "*", mline, col_ch);
+		case ';': return Token(Token::delim, ";", mline, col_ch);
 	}
 	
 	// number literal
@@ -63,7 +70,7 @@ Token Lexer::nextToken() {
 				break;
 			}
 		}
-		return Token(Token::numLiteral, numliteral);
+		return Token(Token::numLiteral, numliteral, mline, col_ch);
 	}
 
 	// identifier
@@ -78,11 +85,11 @@ Token Lexer::nextToken() {
 				break;
 			}
 		}
-		return Token(Token::identifier, identifier);
+		return Token(Token::identifier, identifier, mline, col_ch);
 	}
 
 	goto bad;
 
 	bad:
-	return Token(Token::bad, std::string("")+(char)ch);
+	return Token(Token::bad, std::string("") + (char)ch, mline, mcol);
 }

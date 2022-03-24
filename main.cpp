@@ -9,17 +9,18 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
-	std::ifstream t(argv[1]);
-	std::stringstream buffer; 
-	buffer << t.rdbuf();
+	std::ifstream is(argv[1]);
 
-	Lexer lex(buffer.str());
+	Lexer lex(is);
 	std::vector<Token> tokens = lex.tokenize();
 
 	for(const Token &t : tokens ) {
+		if(t.getTokenType() == Token::eof) break;
 		std::cout
+			<< t.getLine() << ":" << t.getColumn() << "\t"
 			<< "(" << Token::tokenTypeToStr(t.getTokenType())
-			<< ", " << t.getStringData() << ")" << std::endl;
+			<< ", " << t.getStringData() << ")"
+			<< std::endl;
 	}
 
 	return 0;

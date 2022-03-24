@@ -1,6 +1,6 @@
 CC=c++
 CFLAGS=-I.
-DEPS = lexer.hpp
+DEPS = lexer.hpp typeutils.hpp
 OBJ = main.o lexer.o
 
 %.o: %.cpp $(DEPS)
