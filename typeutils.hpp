@@ -12,3 +12,7 @@ inline bool isident(char c) {
 inline bool iswhitespace(char c) {
 	return c == ' ' || c == '\t' || c == '\r' || c == '\n';
 }
+
+inline bool issymbol(char c) {
+	return !iswhitespace(c) && c != '\'' && c != ';' && c != '|';
+}

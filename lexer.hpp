@@ -9,23 +9,23 @@ class Token {
 	enum TokenType{
 		bad, // bad token, should be treated as an error
 		eof,
-		identifier,
-		numLiteral,
-		plusOp,
-		assignOp,
-		multiplyOp,
-		delim,
+		nonterminalSymbol,	// abc123
+		terminalSymbol,		// 'abc123'
+		epsilon,			// epsilon
+		alternative,		// |
+		rightArrow,			// ->
+		delim,				// ;
 	};
 	
 	static const char *tokenTypeToStr(TokenType t) {
 		switch(t) {
 			case bad: return "bad";
 			case eof: return "eof";
-			case identifier: return "identifier";
-			case numLiteral: return "numLiteral";
-			case assignOp: return "assignOp";
-			case plusOp: return "plusOp";
-			case multiplyOp: return "multiplyOp";
+			case nonterminalSymbol: return "nonterminal";
+			case terminalSymbol: return "terminal";
+			case epsilon: return "epsilon";
+			case alternative: return "alternative";
+			case rightArrow: return "rightArrow";
 			case delim: return "delim";
 			default: return "unknown";
 		}

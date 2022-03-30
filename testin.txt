@@ -1,1 +1,5 @@
-position := initial + rate * 60;
+E -> E '+' T | E '-' T | T;
+F T -> T '*' F | T '/' F | F | epsilon ;
+T F -> T '*' F | T '/' F | F | epsilon ;
+F -> '(' E ')' | digit;
+digit -> '1' | '2' | '3' | '4' | '5'|'6';

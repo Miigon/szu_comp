@@ -44,48 +44,45 @@ Token Lexer::nextToken() {
 
 	int col_ch = mcol;
 
+	bool escaped = false;
 	// operator
 	switch(ch) {
-		case ':':
-			if(peek() == '=') {
+		case '-':
+			if(peek() == '>') {
 				skip();
-				return Token(Token::assignOp, ":=", mline, col_ch);
+				return Token(Token::rightArrow, "->", mline, col_ch);
 			} else {
 				goto bad;
 			}
-		case '+': return Token(Token::plusOp, "+", mline, col_ch);
-		case '*': return Token(Token::multiplyOp, "*", mline, col_ch);
+		case '|':
+			return Token(Token::alternative, "|", mline, col_ch);
+		case '\'':
+			escaped = true;
+			ch = next();
+			break;
 		case ';': return Token(Token::delim, ";", mline, col_ch);
 	}
-	
-	// number literal
-	if(isnumber(ch)) {
-		std::string numliteral;
-		numliteral += ch;
-		while((ch = peek()) != EOF) {
-			if(isnumber(ch)) {
-				skip();
-				numliteral += ch;
-			} else {
-				break;
-			}
-		}
-		return Token(Token::numLiteral, numliteral, mline, col_ch);
-	}
 
-	// identifier
-	if(isidentbegin(ch)) {
+	// nonterminal/terminal symbols
+	if(issymbol(ch)) {
 		std::string identifier;
 		identifier += ch;
 		while((ch = peek()) != EOF) {
-			if(isident(ch)) {
+			if(issymbol(ch)) {
 				skip();
 				identifier += ch;
 			} else {
 				break;
 			}
 		}
-		return Token(Token::identifier, identifier, mline, col_ch);
+		if(escaped) {
+			if(next() != '\'') goto bad;
+			return Token(Token::terminalSymbol, identifier, mline, col_ch);
+		}
+		if(identifier == "epsilon") {
+			return Token(Token::epsilon, "epsilon", mline, col_ch);
+		}
+		return Token(Token::nonterminalSymbol, identifier, mline, col_ch);
 	}
 
 	goto bad;
