@@ -10,7 +10,7 @@ class Parser {
 		PSG_0,
 		CSG_1,
 		CFG_2,
-		RG_3, RG_3_LEFT_LINEAR, RG_3_RIGHT_LINEAR, RG_3_LINEAR
+		RG_3_LEFT_LINEAR, RG_3_RIGHT_LINEAR, RG_3_LINEAR
 	};
 
 	struct Production {
@@ -29,7 +29,6 @@ class Parser {
 			case GrammarType::PSG_0: return "phase structure-0";
 			case GrammarType::CSG_1: return "context sensitive-1";
 			case GrammarType::CFG_2: return "context free-2";
-			case GrammarType::RG_3: return "regular-3";
 			case GrammarType::RG_3_LEFT_LINEAR: return "regular-3-left-linear";
 			case GrammarType::RG_3_RIGHT_LINEAR: return "regular-3-right-linear";
 			case GrammarType::RG_3_LINEAR: return "regular-3-linear";

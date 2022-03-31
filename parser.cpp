@@ -79,7 +79,7 @@ Parser::GrammarType Parser::Grammar::detectGrammarType() {
 	if(exist[(int)GT::CFG_2]) return GT::CFG_2;
 
 	if(exist[(int)GT::RG_3_LEFT_LINEAR] && exist[(int)GT::RG_3_RIGHT_LINEAR]) {
-		return GT::RG_3; // ordinary RG_3
+		return GT::CFG_2; // RG_3 can not contain both left linear and right linear
 	}
 
 	if(exist[(int)GT::RG_3_LINEAR]) { // E -> 'a'
