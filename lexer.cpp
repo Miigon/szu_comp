@@ -41,6 +41,10 @@ Token Lexer::nextToken() {
 	} while(iswhitespace(ch));
 
 	if(ch == EOF) return Token(Token::eof, "eof");
+	if(ch == '/' && peek() == '/') { // comment
+		while(peek() != '\n') skip();
+		return std::move(nextToken());
+	}
 
 	int col_ch = mcol;
 
@@ -54,8 +58,9 @@ Token Lexer::nextToken() {
 			} else {
 				goto bad;
 			}
-		case '|':
-			return Token(Token::alternative, "|", mline, col_ch);
+		case '|': return Token(Token::alternative, "|", mline, col_ch);
+		case '[': return Token(Token::leftBracket, "[", mline, col_ch);
+		case ']': return Token(Token::rightBracket, "]", mline, col_ch);
 		case '\'':
 			escaped = true;
 			ch = next();

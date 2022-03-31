@@ -15,6 +15,8 @@ class Token {
 		alternative,		// |
 		rightArrow,			// ->
 		delim,				// ;
+		leftBracket,		// [
+		rightBracket,		// ]
 	};
 	
 	static const char *tokenTypeToStr(TokenType t) {
@@ -27,6 +29,8 @@ class Token {
 			case alternative: return "alternative";
 			case rightArrow: return "rightArrow";
 			case delim: return "delim";
+			case leftBracket: return "leftBracket";
+			case rightBracket: return "rightBracket";
 			default: return "unknown";
 		}
 	}

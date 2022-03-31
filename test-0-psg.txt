@@ -1,3 +1,7 @@
+G[E];
+
+// Grammar3 里面的例子
+
 E -> E '+' T | E '-' T | T;
 F T -> T '*' F | T '/' F | F | epsilon ;
 T F -> T '*' F | T '/' F | F | epsilon ;

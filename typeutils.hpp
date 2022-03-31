@@ -14,5 +14,5 @@ inline bool iswhitespace(char c) {
 }
 
 inline bool issymbol(char c) {
-	return !iswhitespace(c) && c != '\'' && c != ';' && c != '|';
+	return !iswhitespace(c) && c != '\'' && c != ';' && c != '|' && c != '[' && c != ']';
 }
