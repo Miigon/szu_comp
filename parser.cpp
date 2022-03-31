@@ -22,10 +22,6 @@ Parser::GrammarType Parser::Production::detectGrammarType() const {
 	if(nLeftSideVN < 1) return GT::INVALID;
 	if(nLeftSideVN == 1 && nLeftSideVT == 0) { // A ->
 		if(nRightSideVN == 0) { // A -> abc
-			if(rightSymbols.front().getTokenType() == Token::epsilon) {
-				// A -> epsilon
-				return GT::PSG_0;
-			}
 			return GT::RG_3_LINEAR;
 		} else if (nRightSideVN == 1) {
 			// extended definition of RG_3, can have multiple VTs.
@@ -60,7 +56,7 @@ Parser::GrammarType Parser::Grammar::detectGrammarType() {
 			&& p.rightSymbols.size() == 1 && p.rightSymbols.front().getTokenType() == Token::epsilon
 		) {
 			// special case for CSG_1:
-			// S -> epsilon and start symbol S is never on the right side of any production.
+			// if S -> epsilon exists, then start symbol S should never be on the right side of any production.
 			bool found_S_on_right_side = false;
 			for(const Production &pp : prods) {
 				if(&pp == &p) continue;
@@ -72,7 +68,7 @@ Parser::GrammarType Parser::Grammar::detectGrammarType() {
 				}
 				if(found_S_on_right_side) break;
 			}
-			type = !found_S_on_right_side ? GT::CSG_1 : type;
+			type = found_S_on_right_side ? GT::PSG_0 : type;
 		}
 		exist[(int)type] = true;
 	}
